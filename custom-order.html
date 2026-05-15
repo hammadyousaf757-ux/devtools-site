@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Order — DevTools.byHammad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0a0a0a; --bg-card: #111111; --bg-dark: #0d0d0d;
+      --accent: #d4f54a; --accent-hover: #cef036;
+      --border: #111; --border-card: #1f1f1f;
+      --text: #ffffff; --text-muted: #5a5a5a; --text-dim: #444; --text-faint: #333;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    .font-georgia { font-family: 'Playfair Display', Georgia, serif; }
+    .font-mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; border-bottom: 1px solid var(--border); background: rgba(10,10,10,0.9); backdrop-filter: blur(12px); }
+    .nav-inner { max-width: 64rem; margin: 0 auto; padding: 0 1.5rem; height: 3.5rem; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: white; }
+    .nav-logo svg { color: var(--accent); }
+    .nav-links { display: none; align-items: center; gap: 1.5rem; }
+    @media (min-width: 640px) { .nav-links { display: flex; } }
+    .nav-links a { font-size: 0.75rem; color: #555; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a.active { color: var(--accent); }
+
+    .section-label { font-size: 0.75rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .section-title { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 1rem; }
+
+    .hero-custom { padding: 8rem 1.5rem 4rem; text-align: center; position: relative; overflow: hidden; }
+    .hero-glow { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 400px; background: rgba(212,245,74,0.04); border-radius: 50%; filter: blur(120px); pointer-events: none; }
+    .hero-custom-inner { max-width: 40rem; margin: 0 auto; position: relative; }
+    .hero-custom h1 { font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 400; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 1.25rem; }
+    .hero-custom p { color: var(--text-muted); font-size: clamp(1rem, 2vw, 1.125rem); line-height: 1.625; max-width: 28rem; margin: 0 auto; }
+
+    .content { max-width: 64rem; margin: 0 auto; padding: 0 1.5rem; }
+
+    .category-label { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.25rem; margin-top: 3rem; }
+    .category-label:first-of-type { margin-top: 0; }
+    .category-label .icon-wrap { width: 1.75rem; height: 1.75rem; border-radius: 0.5rem; background: rgba(212,245,74,0.1); display: flex; align-items: center; justify-content: center; }
+    .category-label .icon-wrap svg { color: var(--accent); }
+    .category-label span { font-size: 0.6875rem; color: #555; letter-spacing: 0.1em; text-transform: uppercase; }
+
+    .services-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+    @media (min-width: 640px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .services-grid.three-col { grid-template-columns: repeat(3, 1fr); } }
+
+    .service-card { border-radius: 1rem; border: 1px solid var(--border-card); background: var(--bg-card); padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; transition: all 0.3s; }
+    .service-card:hover { border-color: rgba(212,245,74,0.4); box-shadow: 0 0 40px rgba(212,245,74,0.07); transform: translateY(-4px); }
+    .service-icon { width: 2.75rem; height: 2.75rem; border-radius: 0.75rem; background: rgba(212,245,74,0.1); display: flex; align-items: center; justify-content: center; }
+    .service-icon svg { color: var(--accent); }
+    .service-name { font-size: 1.0625rem; line-height: 1.4; }
+    .service-desc { color: #777; font-size: 0.8125rem; line-height: 1.6; flex: 1; }
+
+    .steps-section { border-top: 1px solid var(--border); margin-top: 5rem; }
+    .steps-inner { max-width: 64rem; margin: 0 auto; padding: 5rem 1.5rem; }
+    .steps-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 2.5rem; }
+    @media (min-width: 640px) { .steps-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; } }
+    .step { text-align: center; }
+    .step-num { width: 3.5rem; height: 3.5rem; border-radius: 1rem; border: 1px solid rgba(212,245,74,0.2); background: rgba(212,245,74,0.05); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+    .step-num span { color: var(--accent); font-weight: 700; font-size: 1.25rem; }
+    .step-title { font-size: 0.875rem; font-weight: 500; margin-bottom: 0.375rem; }
+    .step-desc { color: #555; font-size: 0.75rem; line-height: 1.5; }
+
+    .cta-section { border-top: 1px solid var(--border); }
+    .cta-inner { max-width: 40rem; margin: 0 auto; padding: 5rem 1.5rem; text-align: center; }
+    .cta-card { border-radius: 1rem; border: 1px solid var(--border-card); background: var(--bg-card); padding: 2.5rem 1.5rem; position: relative; overflow: hidden; }
+    @media (min-width: 640px) { .cta-card { padding: 3rem 2.5rem; } }
+    .cta-glow { position: absolute; top: -30%; left: 50%; transform: translateX(-50%); width: 300px; height: 200px; background: rgba(212,245,74,0.04); border-radius: 50%; filter: blur(80px); pointer-events: none; }
+    .cta-icon { width: 4rem; height: 4rem; border-radius: 1rem; background: rgba(212,245,74,0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; position: relative; animation: pulse-glow 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    .cta-icon svg { color: var(--accent); }
+    @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 20px rgba(212,245,74,0.15); } 50% { box-shadow: 0 0 40px rgba(212,245,74,0.3); } }
+    .cta-card h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 0.75rem; position: relative; }
+    .cta-card p { color: #666; font-size: 0.9375rem; line-height: 1.6; margin-bottom: 2rem; position: relative; }
+
+    .email-link { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border-radius: 0.75rem; background: var(--bg-dark); border: 1px solid #1a1a1a; text-decoration: none; transition: all 0.2s; margin-bottom: 1.25rem; }
+    .email-link:hover { border-color: rgba(212,245,74,0.3); }
+    .email-icon { width: 2.5rem; height: 2.5rem; border-radius: 0.625rem; background: rgba(212,245,74,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.2s; }
+    .email-link:hover .email-icon { transform: scale(1.1); }
+    .email-icon svg { color: var(--accent); }
+    .email-text { text-align: left; min-width: 0; }
+    .email-text .label { font-size: 0.6875rem; color: #444; }
+    .email-text .address { font-size: 0.875rem; color: white; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .email-arrow { color: #333; transition: all 0.2s; flex-shrink: 0; margin-left: auto; }
+    .email-link:hover .email-arrow { color: var(--accent); transform: translateX(4px); }
+
+    .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent); color: var(--bg); padding: 0.875rem 1.75rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 0 32px rgba(212,245,74,0.2); text-decoration: none; position: relative; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:active { transform: scale(0.98); }
+
+    .tips { border-radius: 1rem; border: 1px solid #161616; background: var(--bg-dark); padding: 1.5rem; margin-top: 1.5rem; text-align: left; }
+    .tips h3 { font-size: 0.8125rem; font-weight: 500; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .tips h3 svg { color: #eab308; }
+    .tips-grid { display: grid; grid-template-columns: 1fr; gap: 0.625rem; }
+    @media (min-width: 640px) { .tips-grid { grid-template-columns: 1fr 1fr; } }
+    .tip-item { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.8125rem; color: #666; }
+    .tip-bullet { color: var(--accent); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .tips .note { color: #3a3a3a; font-size: 0.75rem; margin-top: 1rem; font-style: italic; }
+
+    .trust-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-top: 1.5rem; }
+    @media (min-width: 640px) { .trust-grid { grid-template-columns: repeat(4, 1fr); } }
+    .trust-item { border-radius: 0.75rem; border: 1px solid #161616; background: var(--bg-dark); padding: 1rem; text-align: center; }
+    .trust-icon { width: 2rem; height: 2rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; }
+    .trust-item .t-label { font-size: 0.75rem; font-weight: 500; color: white; }
+    .trust-item .t-sub { font-size: 0.625rem; color: #444; margin-top: 0.125rem; }
+
+    footer { border-top: 1px solid var(--border); background: var(--bg-dark); }
+    .footer-inner { max-width: 64rem; margin: 0 auto; padding: 1.75rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    @media (min-width: 640px) { .footer-inner { flex-direction: row; justify-content: space-between; } }
+    .footer-logo { display: flex; align-items: center; gap: 0.5rem; }
+    .footer-logo svg { color: var(--accent); }
+    .footer-logo span { color: var(--text-faint); font-size: 0.75rem; }
+    .footer-links { display: flex; align-items: center; gap: 1.5rem; }
+    .footer-links a { font-size: 0.75rem; color: var(--text-faint); text-decoration: none; transition: color 0.2s; display: inline-flex; align-items: center; gap: 0.375rem; }
+    .footer-links a:hover { color: var(--accent); }
+
+    .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 100; border-radius: 0.75rem; border: 1px solid #1e1e1e; background: rgba(17,17,17,0.95); backdrop-filter: blur(12px); padding: 1rem 1.25rem; display: flex; align-items: center; gap: 0.75rem; transform: translateY(20px); opacity: 0; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; }
+    .toast.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    .toast-icon { width: 2rem; height: 2rem; border-radius: 0.5rem; background: rgba(212,245,74,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .toast-icon svg { color: var(--accent); }
+    .toast p { font-size: 0.8125rem; color: #999; }
+
+    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <i data-lucide="terminal" style="width:15px;height:15px;"></i>
+        <span class="font-mono">DevTools<span style="color:var(--accent);">.byHammad</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#products">Products</a>
+        <a href="custom-order.html" class="active">Custom Order</a>
+        <a href="index.html#contact">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero-custom">
+    <div class="hero-glow"></div>
+    <div class="hero-custom-inner fade-in">
+      <p class="section-label font-mono" style="text-align:center;">// custom order</p>
+      <h1 class="font-georgia">Need something<br><span style="color:var(--accent);">built custom?</span></h1>
+      <p>I make websites and small programs — file organizers, image resizers, little tools that save you time. If you need something built from scratch, I'm your person.</p>
+    </div>
+  </section>
+
+  <!-- WHAT I CAN BUILD -->
+  <section class="content" style="padding-bottom:5rem;">
+    <div class="fade-in">
+      <p class="section-label font-mono">// services</p>
+      <h2 class="section-title font-georgia">What I can build for you.</h2>
+    </div>
+
+    <!-- Websites -->
+    <div class="fade-in">
+      <div class="category-label">
+        <div class="icon-wrap"><i data-lucide="globe" style="width:12px;height:12px;"></i></div>
+        <span class="font-mono">Websites</span>
+      </div>
+      <div class="services-grid three-col" style="margin-bottom:2.5rem;">
+        <div class="service-card">
+          <div class="service-icon"><i data-lucide="layout" style="width:20px;height:20px;"></i></div>
+          <h3 class="font-georgia service-name">Landing Pages</h3>
+          <p class="service-desc">Clean, fast, single-page sites that get your message across without the bloat.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i data-lucide="user" style="width:20px;height:20px;"></i></div>
+          <h3 class="font-georgia service-name">Portfolio Sites</h3>
+          <p class="service-desc">Show off your work with a personal site that actually looks good and works smooth.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i data-lucide="store" style="width:20px;height:20px;"></i></div>
+          <h3 class="font-georgia service-name">Business Websites</h3>
+          <p class="service-desc">A proper web presence for your business — no templates, built to match what you do.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Programs & Tools -->
+    <div class="fade-in">
+      <div class="category-label">
+        <div class="icon-wrap"><i data-lucide="terminal" style="width:12px;height:12px;"></i></div>
+        <span class="font-mono">Programs & Tools</span>
+      </div>
+      <div class="services-grid three-col">
+        <div class="service-card">
+          <div class="service-icon"><i data-lucide="folder-open" style="width:20px;height:20px;"></i></div>
+          <h3 class="font-georgia service-name">File Organizers</h3>
+          <p class="service-desc">Tired of messy folders? I'll build you a tool that sorts, renames, and organizes files exactly how you want.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i data-lucide="image" style="width:20px;height:20px;"></i></div>
+          <h3 class="font-georgia service-name">Image Resizers</h3>
+          <p class="service-desc">Batch resize, compress, or convert images in seconds. No more doing it one by one.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i data-lucide="repeat" style="width:20px;height:20px;"></i></div>
+          <h3 class="font-georgia service-name">Automation Scripts</h3>
+          <p class="service-desc">Got a boring, repetitive task? I can write a script that does it for you while you sit back.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i data-lucide="file-spreadsheet" style="width:20px;height:20px;"></i></div>
+          <h3 class="font-georgia service-name">Data Tools</h3>
+          <p class="service-desc">CSV cleaners, text processors, spreadsheet helpers — small tools that make data painless.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i data-lucide="file-text" style="width:20px;height:20px;"></i></div>
+          <h3 class="font-georgia service-name">File Converters</h3>
+          <p class="service-desc">Need to convert files from one format to another? I'll make it simple and fast.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i data-lucide="puzzle" style="width:20px;height:20px;"></i></div>
+          <h3 class="font-georgia service-name">Custom Tools</h3>
+          <p class="service-desc">Something I haven't listed? If it's a small program that solves a problem, I can probably build it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="steps-section">
+    <div class="steps-inner fade-in">
+      <p class="section-label font-mono" style="text-align:center;">// process</p>
+      <h2 class="font-georgia section-title" style="text-align:center;">How it works.</h2>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-num font-mono"><span>1</span></div>
+          <p class="step-title">You Email Me</p>
+          <p class="step-desc">Tell me what you need. A few lines is enough — don't overthink it.</p>
+        </div>
+        <div class="step">
+          <div class="step-num font-mono"><span>2</span></div>
+          <p class="step-title">I Reply & We Chat</p>
+          <p class="step-desc">Within a day, I'll get back with questions, a plan, and a fair price.</p>
+        </div>
+        <div class="step">
+          <div class="step-num font-mono"><span>3</span></div>
+          <p class="step-title">I Build It</p>
+          <p class="step-desc">You'll see progress as I go. We tweak until it's right.</p>
+        </div>
+        <div class="step">
+          <div class="step-num font-mono"><span>4</span></div>
+          <p class="step-title">Delivered</p>
+          <p class="step-desc">You get the final files, and I stick around if you need anything after.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EMAIL CTA -->
+  <section class="cta-section">
+    <div class="cta-inner fade-in">
+      <div class="cta-card">
+        <div class="cta-glow"></div>
+        <div class="cta-icon">
+          <i data-lucide="mail" style="width:24px;height:24px;"></i>
+        </div>
+        <h2 class="font-georgia">Shoot me an email.</h2>
+        <p>Just say hi and tell me what you need. Even "I need a file organizer" or "make me a portfolio site" is enough. I'll take it from there.</p>
+
+        <a href="mailto:hammadyousaf757@gmail.com" class="email-link">
+          <div class="email-icon"><i data-lucide="send" style="width:16px;height:16px;"></i></div>
+          <div class="email-text">
+            <p class="label font-mono">Email me at</p>
+            <p class="address font-mono">hammadyousaf757@gmail.com</p>
+          </div>
+          <i data-lucide="arrow-right" class="email-arrow" style="width:14px;height:14px;"></i>
+        </a>
+
+        <a href="mailto:hammadyousaf757@gmail.com?subject=Custom%20Order%20Inquiry&body=Hi%2C%20I%27m%20interested%20in%20a%20custom%20project.%20Here%27s%20what%20I%20need%3A%0A%0A%5BDescribe%20your%20project%20here%5D%0A%0ATimeline%3A%20%0ABudget%20range%3A%20%0A" class="btn-primary font-mono">
+          <i data-lucide="pen-line" style="width:14px;height:14px;"></i>
+          Send Custom Order Request
+        </a>
+      </div>
+
+      <!-- Tips -->
+      <div class="tips">
+        <h3><i data-lucide="lightbulb" style="width:14px;height:14px;"></i> Not sure what to say? Just include:</h3>
+        <div class="tips-grid">
+          <div class="tip-item"><span class="tip-bullet">•</span><span>What you need — a website, a tool, a script?</span></div>
+          <div class="tip-item"><span class="tip-bullet">•</span><span>Who it's for — yourself, your business, a client?</span></div>
+          <div class="tip-item"><span class="tip-bullet">•</span><span>Any examples or references you've seen</span></div>
+          <div class="tip-item"><span class="tip-bullet">•</span><span>Rough deadline or budget — ballpark is fine</span></div>
+        </div>
+        <p class="note">Even a one-liner like "I need a tool that renames my photos by date" works perfectly. We'll figure out the details together.</p>
+      </div>
+
+      <!-- Trust badges -->
+      <div class="trust-grid">
+        <div class="trust-item">
+          <div class="trust-icon" style="background:rgba(59,130,246,0.1);"><i data-lucide="clock" style="width:14px;height:14px;color:#60a5fa;"></i></div>
+          <p class="t-label font-mono">Quick Reply</p>
+          <p class="t-sub">Within 24 hours</p>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon" style="background:rgba(168,85,247,0.1);"><i data-lucide="shield-check" style="width:14px;height:14px;color:#c084fc;"></i></div>
+          <p class="t-label font-mono">No Commitment</p>
+          <p class="t-sub">Free consultation</p>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon" style="background:rgba(234,179,8,0.1);"><i data-lucide="refresh-cw" style="width:14px;height:14px;color:#facc15;"></i></div>
+          <p class="t-label font-mono">Revisions</p>
+          <p class="t-sub">Until it feels right</p>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon" style="background:rgba(34,197,94,0.1);"><i data-lucide="life-buoy" style="width:14px;height:14px;color:#4ade80;"></i></div>
+          <p class="t-label font-mono">After Delivery</p>
+          <p class="t-sub">Support included</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <i data-lucide="terminal" style="width:13px;height:13px;"></i>
+        <span class="font-mono">DevTools.byHammad — built with Python &amp; care.</span>
+      </div>
+      <div class="footer-links">
+        <a href="index.html" class="font-mono">Home</a>
+        <a href="mailto:hammadyousaf757@gmail.com" class="font-mono">Email</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast">
+    <div class="toast-icon"><i data-lucide="check" style="width:14px;height:14px;"></i></div>
+    <p class="font-mono">Opening your email client...</p>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const fadeEls = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    fadeEls.forEach(el => observer.observe(el));
+
+    // Toast on mailto click
+    document.querySelectorAll('a[href^="mailto:"]').forEach(link => {
+      link.addEventListener('click', () => {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+      });
+    });
+  </script>
+</body>
+</html>
