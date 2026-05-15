@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Organizer Pro - DevTools.byHammad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0a0a0a; --bg-card: #111111; --bg-dark: #0d0d0d;
+      --accent: #d4f54a; --accent-hover: #cef036;
+      --border: #111; --border-card: #1f1f1f;
+      --text: #ffffff; --text-muted: #5a5a5a; --text-dim: #444; --text-faint: #333;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    .font-georgia { font-family: 'Playfair Display', Georgia, serif; }
+    .font-mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace; }
+
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; border-bottom: 1px solid var(--border); background: rgba(10,10,10,0.9); backdrop-filter: blur(12px); }
+    .nav-inner { max-width: 64rem; margin: 0 auto; padding: 0 1.5rem; height: 3.5rem; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: white; }
+    .nav-logo svg { color: var(--accent); }
+    .nav-links { display: none; align-items: center; gap: 1.5rem; }
+    @media (min-width: 640px) { .nav-links { display: flex; } }
+    .nav-links a { font-size: 0.75rem; color: #555; text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+
+    .page-hero { padding: 8rem 1.5rem 4rem; text-align: center; }
+    .page-hero h1 { font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 400; line-height: 1.1; margin-bottom: 1rem; }
+    .page-hero h1 .accent { color: var(--accent); }
+    .page-hero p { color: var(--text-muted); font-size: 1.125rem; max-width: 36rem; margin: 0 auto 2rem; }
+    .price-tag { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.25rem; border-radius: 9999px; border: 1px solid var(--accent); color: var(--accent); font-size: 1.25rem; font-weight: 600; margin-bottom: 2rem; background: rgba(212,245,74,0.05); }
+    
+    .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent); color: var(--bg); padding: 0.875rem 2rem; border-radius: 0.75rem; font-size: 1rem; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 0 32px rgba(212,245,74,0.2); text-decoration: none; }
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .container { max-width: 64rem; margin: 0 auto; padding: 0 1.5rem; }
+    
+    .gallery { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 6rem; }
+    @media (min-width: 768px) { .gallery { grid-template-columns: 1fr 1fr; } }
+    .gallery-item { border-radius: 1rem; border: 1px solid #161616; overflow: hidden; background: var(--bg-dark); }
+    .gallery-item img { width: 100%; height: auto; display: block; }
+    .gallery-caption { padding: 1rem; text-align: center; font-size: 0.75rem; color: #555; letter-spacing: 0.05em; text-transform: uppercase; }
+
+    .features { margin-bottom: 6rem; }
+    .features-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 2rem; }
+    @media (min-width: 640px) { .features-grid { grid-template-columns: 1fr 1fr; } }
+    .feature-card { padding: 1.5rem; border-radius: 1rem; border: 1px solid var(--border-card); background: var(--bg-card); }
+    .feature-icon { width: 2.5rem; height: 2.5rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; background: rgba(212,245,74,0.1); color: var(--accent); margin-bottom: 1rem; }
+    .feature-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .feature-desc { font-size: 0.875rem; color: #777; line-height: 1.5; }
+
+    .cta-section { text-align: center; padding: 4rem 1.5rem; border-top: 1px solid var(--border); margin-top: 4rem; }
+
+    footer { border-top: 1px solid var(--border); background: var(--bg-dark); }
+    .footer-inner { max-width: 64rem; margin: 0 auto; padding: 1.75rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    @media (min-width: 640px) { .footer-inner { flex-direction: row; justify-content: space-between; } }
+    .footer-logo { display: flex; align-items: center; gap: 0.5rem; }
+    .footer-logo svg { color: var(--accent); }
+    .footer-logo span { color: var(--text-faint); font-size: 0.75rem; }
+
+    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <i data-lucide="terminal" style="width:15px;height:15px;"></i>
+        <span class="font-mono">DevTools<span style="color:var(--accent);">.byHammad</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Back Home</a>
+        <a href="#features">Features</a>
+        <a href="#buy">Buy Now</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-hero fade-in">
+    <p class="font-mono" style="color: var(--accent); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem;">// File Organizer Pro v2.2</p>
+    <h1 class="font-georgia">Auto-sort your mess<br><span class="accent">in one click.</span></h1>
+    <p>Stop wasting time digging through thousands of files. Let File Organizer Pro sort your folders instantly, safely, and effortlessly.</p>
+    <div class="price-tag font-mono">$5.00</div>
+    <br>
+    <a href="#buy" class="btn-primary font-mono">
+      Get It Now on Gumroad
+      <i data-lucide="external-link" style="width:16px;height:16px;"></i>
+    </a>
+  </section>
+
+  <div class="container">
+    <!-- Before / After Gallery -->
+    <div class="fade-in gallery">
+      <div class="gallery-item">
+        <!-- REPLACE src WITH YOUR "BEFORE" SCREENSHOT -->
+        <img src="image1.png">
+        <div class="gallery-caption font-mono">Before: The Mess 🤯</div>
+      </div>
+      <div class="gallery-item">
+        <!-- REPLACE src WITH YOUR "AFTER" SCREENSHOT -->
+        <img src= "image2.png">
+        <div class="gallery-caption font-mono">After: Sorted & Clean 😌</div>
+      </div>
+    </div>
+
+    <!-- App Interface Screenshot -->
+    <div class="fade-in gallery" style="grid-template-columns: 1fr; max-width: 48rem; margin-left: auto; margin-right: auto; margin-bottom: 6rem;">
+      <div class="gallery-item">
+        <!-- REPLACE src WITH YOUR ACTUAL APP INTERFACE SCREENSHOT (The one you showed me with the GUI) -->
+        <img src="image3.png">
+        <div class="gallery-caption font-mono">The Interface: Clean, simple, and safe with Dry Run mode.</div>
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <section id="features" class="features fade-in">
+      <p class="section-label font-mono" style="color: var(--accent); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem;">// features</p>
+      <h2 class="font-georgia" style="font-size: clamp(2rem, 4vw, 2.5rem);">Why it's the best organizer.</h2>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><i data-lucide="shield-check" style="width:20px;height:20px;"></i></div>
+          <h3 class="feature-title">Dry Run Mode (100% Safe)</h3>
+          <p class="feature-desc">Preview exactly how your files will be sorted before they actually move. Never lose a file or misplace something important again.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i data-lucide="zap" style="width:20px;height:20px;"></i></div>
+          <h3 class="feature-title">Blazing Fast</h3>
+          <p class="feature-desc">Sorted over 10,000 files in seconds. No lag, no waiting. It does the heavy lifting instantly.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i data-lucide="folder-tree" style="width:20px;height:20px;"></i></div>
+          <h3 class="feature-title">Deep Clean</h3>
+          <p class="feature-desc">Toggle "Include Subfolders" to clean deep directory messes, and "Remove Empty Folders" to leave no junk behind.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i data-lucide="scroll-text" style="width:20px;height:20px;"></i></div>
+          <h3 class="feature-title">Activity Log</h3>
+          <p class="feature-desc">See exactly what happened. The log shows you how many Images, Code files, and Documents were sorted.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i data-lucide="monitor" style="width:20px;height:20px;"></i></div>
+          <h3 class="feature-title">Standalone App</h3>
+          <p class="feature-desc">No Python installation required. Just download, double-click, and run. Works on Windows, Mac, and Linux.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i data-lucide="tag" style="width:20px;height:20px;"></i></div>
+          <h3 class="feature-title">One-Time Price</h3>
+          <p class="feature-desc">No subscriptions. No hidden fees. Pay $5 once, and it's yours forever. Cheaper than a cup of coffee.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Buy CTA -->
+    <section id="buy" class="cta-section fade-in">
+      <h2 class="font-georgia" style="font-size: clamp(2rem, 4vw, 2.5rem); margin-bottom: 1rem;">Ready to clean up?</h2>
+      <p style="color: #555; max-width: 24rem; margin: 0 auto 2rem;">Get File Organizer Pro for $5. Instant download. Lifetime updates. No subscriptions.</p>
+      <a href="https://gumroad.com" target="_blank" class="btn-primary font-mono" style="font-size: 1.125rem; padding: 1rem 2.5rem;">
+        Buy on Gumroad for $5
+        <i data-lucide="external-link" style="width:18px;height:18px;"></i>
+      </a>
+    </section>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <i data-lucide="terminal" style="width:13px;height:13px;"></i>
+        <span class="font-mono">DevTools.byHammad — built with Python &amp; care.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    const fadeEls = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    fadeEls.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
